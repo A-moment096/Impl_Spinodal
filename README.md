@@ -2,6 +2,8 @@
 
 A hobby project to explore the possiblity of phase field with programming languages.
 
+**Available in:** [English](README.md) | [中文](README.zh.md)
+
 ### Introduction
 
 This repository contains code for spinodal decomposition of A-B alloy, written in different programming languages. This repository should be updated with my personal blog [A Moment's Rest](https://a-moment096.github.io). The simulation case is from *Programming Phase-Field Modeling*, case study 1 by **S. Bulent Biner**, but may be extended in several means.
@@ -23,7 +25,7 @@ Currently it contains:
 
 ### Furture Plan
 
-For this series, we are going to cover the following programming languages (not in the implementation order though).
+For this series, we are going to cover the following programming languages (but may not implement in this order though).
 
 - JavaScript
 - TypeScript
