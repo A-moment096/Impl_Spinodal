@@ -87,6 +87,7 @@ let con_mesh = new Array(Nx * Ny)
   .fill(0)
   .map(() => con_init + 2 * dcon * (Math.random() - 0.5));
 
+performance.mark("start-simulation");
 for (let istep = 0; istep < Nstep + 1; istep++) {
   const temp_mesh = mesh_periodic(con_mesh, dF_dc, Nx, Ny, dx, dy, A, kappa);
   const dc = mesh_periodic(temp_mesh, laplacian, Nx, Ny, dx, dy, A, kappa);
@@ -97,3 +98,11 @@ for (let istep = 0; istep < Nstep + 1; istep++) {
     console.log(`Step: ${istep}`);
   }
 }
+performance.mark("end-simulation");
+performance.measure(
+  "Total Simulation Time",
+  "start-simulation",
+  "end-simulation",
+);
+
+console.log(`Total Simulation Time: ${performance.getEntriesByName("Total Simulation Time")[0].duration.toFixed(2)} ms`);
