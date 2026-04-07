@@ -6,10 +6,10 @@
       "size": [64, 64],
       "spacing": [1.0, 1.0],
       "boundary_conditions": [
-        { "position": "north", "type": "fixed", "value": 0.4 },
-        { "position": "south", "type": "fixed", "value": 0.4 },
-        { "position": "east", "type": "fixed", "value": 0.4 },
-        { "position": "west", "type": "fixed", "value": 0.4 }
+        { "position": "north", "type": "periodic" },
+        { "position": "south", "type": "periodic" },
+        { "position": "east",  "type": "periodic" },
+        { "position": "west",  "type": "periodic" }
       ],
       "initial_geometry": {
         "type": "random",
@@ -42,6 +42,7 @@
   "output": {
     "folder": "output",
     "writeEvery": 100,
-    "logEvery": 500
+    "logEvery": 500,
+    "nanCheckEvery": 1000
   }
 }
