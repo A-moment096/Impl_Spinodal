@@ -1,0 +1,32 @@
+{
+  "name": "js_impl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "check": "node --check JS_impl_v1.js",
+    "start": "node JS_impl_v3.js simu_config.json",
+    "start:v1": "node JS_impl_v1.js",
+    "start:v2": "node JS_impl_v2.js",
+    "start:v3": "node JS_impl_v3.js simu_config.json",
+    "start:ts": "pnpm tsx TS_impl_v1.ts",
+    "start:ts:v2": "vite --open TS_impl_v2.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.20.0",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.7"
+  },
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  }
+}

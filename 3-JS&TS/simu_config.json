@@ -12,7 +12,7 @@
         { "position": "west",  "type": "periodic" }
       ],
       "initial_geometry": {
-        "type": "random",
+        "type": "random-uniform",
         "parameters": {
           "min_val": 0.395,
           "max_val": 0.405
@@ -40,9 +40,9 @@
     "dt": 0.01
   },
   "output": {
-    "folder": "output",
+    "folder": "output_ts",
     "writeEvery": 100,
     "logEvery": 500,
-    "nanCheckEvery": 1000
+    "nanCheckEvery": false
   }
 }
