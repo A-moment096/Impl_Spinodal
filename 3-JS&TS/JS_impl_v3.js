@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { SimulationConfig } from "./JS_v3_config.js";
+import { SimulationConfig } from "./JS_impl_v3_config.js";
 import {
   BoundaryConditions,
   CH_Solver,
@@ -7,7 +7,7 @@ import {
   GradientEnergy,
   Mesh,
   RandomInit,
-} from "./JS_v3_data_structures.js";
+} from "./JS_impl_v3_data_structures.js";
 
 const configPath = process.argv[2] ?? "simu_config.json";
 const simulationConfig = SimulationConfig.fromFile(configPath);

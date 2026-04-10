@@ -53,8 +53,8 @@ DATASET STRUCTURED_GRID
 DIMENSIONS ${Nx} ${Ny} 1
 POINTS ${Nx * Ny} float
 ${Array.from({ length: Ny }, (_, j) =>
-  Array.from({ length: Nx }, (_, i) => `${i * dx} ${j * dy} 0`).join("\n"),
-).join("\n")}
+    Array.from({ length: Nx }, (_, i) => `${i * dx} ${j * dy} 0`).join("\n"),
+  ).join("\n")}
 POINT_DATA ${Nx * Ny}
 SCALARS CON float
 LOOKUP_TABLE default

@@ -161,20 +161,20 @@ DATASET STRUCTURED_GRID
 DIMENSIONS ${this.Nx} ${this.Ny} 1
 POINTS ${this.Nx * this.Ny} float
 ${Array.from({ length: this.Ny }, (_, j) =>
-  Array.from(
-    { length: this.Nx },
-    (_, i) => `${i * this.dx} ${j * this.dy} 0`,
-  ).join("\n"),
-).join("\n")}
+      Array.from(
+        { length: this.Nx },
+        (_, i) => `${i * this.dx} ${j * this.dy} 0`,
+      ).join("\n"),
+    ).join("\n")}
 POINT_DATA ${this.Nx * this.Ny}
 SCALARS CON float
 LOOKUP_TABLE default
 ${Array.from({ length: this.Ny }, (_, j) =>
-  Array.from(
-    { length: this.Nx },
-    (_, i) => `${this.data[(j + 1) * (this.Nx + 2) + i + 1]}`,
-  ).join("\n"),
-).join("\n")}
+      Array.from(
+        { length: this.Nx },
+        (_, i) => `${this.data[(j + 1) * (this.Nx + 2) + i + 1]}`,
+      ).join("\n"),
+    ).join("\n")}
 `;
 
     fs.writeFileSync(`${folder_name}/step_${istep}.vtk`, vtkContent);
