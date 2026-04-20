@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "name": "C/C++: gcc debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}/build/linux/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: evoke build script",
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+        },
+        {
+            "name": "C/C++: cl.exe debug",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${fileDirname}\\build\\windows\\${fileBasenameNoExtension}.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "console": "integratedTerminal",
+            "preLaunchTask": "C/C++: evoke build script",
+        }
+    ]
+}

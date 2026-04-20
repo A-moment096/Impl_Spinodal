@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "C_fft_my_complex.h"
+#include "C_my_fft.h"
 
 #define M_PI 3.14159265358979323846 /* pi */
 

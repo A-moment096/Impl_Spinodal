@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,9 +7,9 @@
 #define M_PI 3.14159265358979323846 /* pi */
 #define TRUNCATE_REAL 1e-6
 
-#include "./create_directory.h"
-#if defined(_WIN32)
-#include "./include/windows/fftw.h"
+// #define OUTPUT_VTK // whether output the vtk files
+#ifdef _WIN32
+#include "include/windows/fftw3.h"
 #else
 #include "include/linux/fftw3.h"
 #endif
@@ -78,24 +80,28 @@ int main(void) {
 
     const double c_min = 0.395, c_max = 0.405; // c_0 = 0.4, delta_c = 0.005
 
-    const char *output_directory_path = "./output/v2/";
+    const char *output_directory_path = "./output/v3/";
     if (create_directories(output_directory_path) != 0) {
         perror("failed when creating directory");
         exit(1);
     }
 
     fftw_complex *con = fftw_alloc_complex(N_full); // alloc_complex is zero-initialize
+    fftw_complex *con_trans = fftw_alloc_complex(N_full);
+    fftw_complex *mesh_df_dc = fftw_alloc_complex(N_full);
+
+    fftw_plan con_2_con_trans = fftw_plan_dft_2d((int)N, (int)N, con, con_trans, FFTW_FORWARD, FFTW_PATIENT);
+    fftw_plan con_trans_2_con = fftw_plan_dft_2d((int)N, (int)N, con_trans, con, FFTW_BACKWARD, FFTW_PATIENT); // need manually normalize
+    fftw_plan trans_mesh_df_dc = fftw_plan_dft_2d((int)N, (int)N, mesh_df_dc, mesh_df_dc, FFTW_FORWARD, FFTW_PATIENT);
+
     for (size_t i = 0; i < N_full; i++) {
         double uniform_rand_0_1 = (double)rand() / ((double)RAND_MAX);
         con[i][0] = c_min + uniform_rand_0_1 * (c_max - c_min);
     }
 
-    fftw_complex *con_trans = fftw_alloc_complex(N_full);
-    fftw_complex *mesh_df_dc = fftw_alloc_complex(N_full);
-
-    fftw_plan con_2_con_trans = fftw_plan_dft_2d(N, N, con, con_trans, FFTW_FORWARD, FFTW_PATIENT);
-    fftw_plan con_trans_2_con = fftw_plan_dft_2d(N, N, con_trans, con, FFTW_BACKWARD, FFTW_PATIENT); // need manually normalize
-    fftw_plan trans_mesh_df_dc = fftw_plan_dft_2d(N, N, mesh_df_dc, mesh_df_dc, FFTW_FORWARD, FFTW_PATIENT);
+    bench_init();
+    bench_time_t t_start, t_end;
+    bench_now(&t_start);
 
     for (size_t istep = 0; istep <= num_total_compute; istep++) {
         // my_fft_forward_2d(con, con_trans, N, N);
@@ -103,6 +109,7 @@ int main(void) {
         // fill/refill mesh_df_dc
         for (size_t i = 0; i < N_full; i++) {
             mesh_df_dc[i][0] = df_dc(A, con[i][0]);
+            mesh_df_dc[i][1] = 0.0;
         }
 
         // get transformed mesh_df_dc
@@ -139,6 +146,7 @@ int main(void) {
 
         // my_fft_backward_2d(con_trans, con, N, N);
         fftw_execute(con_trans_2_con);
+
         for (size_t i = 0; i < N_full; i++) {
             con[i][0] /= (double)N_full;
             // image part is zero, no need to normalize
@@ -146,11 +154,19 @@ int main(void) {
 
         if (istep % output_every == 0 || istep == num_total_compute) {
             printf("output steps: %zu\n", istep);
+#ifdef OUTPUT_VTK
             write_VTK(con, N, N, output_directory_path, istep, dx);
+#endif
         }
     }
+    bench_now(&t_end);
+    printf("Total time: %.4f s\n", bench_elapsed(&t_start, &t_end));
 
-    free(mesh_df_dc);
-    free(con_trans);
-    free(con);
+    fftw_destroy_plan(trans_mesh_df_dc);
+    fftw_destroy_plan(con_trans_2_con);
+    fftw_destroy_plan(con_2_con_trans);
+
+    fftw_free(mesh_df_dc);
+    fftw_free(con_trans);
+    fftw_free(con);
 }

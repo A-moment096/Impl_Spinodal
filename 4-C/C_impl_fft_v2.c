@@ -1,3 +1,5 @@
+#include "platform.h"
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,10 +7,11 @@
 #define M_PI 3.14159265358979323846 /* pi */
 #define TRUNCATE_REAL 1e-6
 
+// #define OUTPUT_VTK // whether output the vtk files
+// #define MY_FFT_USE_RECURSIVE // whether use the recursive version of fft
 #include "./C_my_fft.h"
 // my_fft_forward_2d(in,out,N0,N1) = fftw_plan_dft_2d(N0,N1,in,out,FFTW_FORWARD,_)
 // my_fft_backward_2d(in,out,N0,N1) = fftw_plan_dft_2d(N0,N1,in,out,FFTW_BACKWARD,_) / (N0*N1)
-#include "./create_directory.h"
 
 double df_dc(double A, double c) {
     return 2.0 * A * c * (1.0 - c) * (1.0 - 2.0 * c);
@@ -92,6 +95,10 @@ int main(void) {
     my_complex *mesh_df_dc = alloc_complex(N_full);
     my_complex *mesh_df_dc_trans = alloc_complex(N_full);
 
+    bench_init();
+    bench_time_t t_start, t_end;
+    bench_now(&t_start);
+
     for (size_t istep = 0; istep <= num_total_compute; istep++) {
         my_fft_forward_2d(con, con_trans, N, N);
         // fill/refill mesh_df_dc
@@ -134,9 +141,13 @@ int main(void) {
 
         if (istep % output_every == 0 || istep == num_total_compute) {
             printf("output steps: %zu\n", istep);
+#ifdef OUTPUT_VTK
             write_VTK(con, N, N, output_directory_path, istep, dx);
+#endif
         }
     }
+    bench_now(&t_end);
+    printf("Total time: %.4f s\n", bench_elapsed(&t_start, &t_end));
 
     free(mesh_df_dc_trans);
     free(mesh_df_dc);

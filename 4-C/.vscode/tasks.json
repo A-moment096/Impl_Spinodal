@@ -1,0 +1,55 @@
+{
+    "version": "2.0.0",
+    "inputs": [
+        {
+            "id": "buildType",
+            "type": "pickString",
+            "description": "Select build type",
+            "options": [
+                "debug",
+                "release"
+            ],
+            "default": "debug"
+        }
+    ],
+    "tasks": [
+        {
+            "label": "C/C++: evoke build script",
+            "type": "shell",
+            "windows": {
+                "command": "powershell.exe",
+                "args": [
+                    "-ExecutionPolicy",
+                    "Bypass",
+                    "-File",
+                    "${fileDirname}\\scripts\\build.ps1",
+                    "-Src",
+                    "${file}",
+                    "-OutDir",
+                    "${fileDirname}\\build\\windows",
+                    "-BuildType",
+                    "${input:buildType}"
+                ],
+                "problemMatcher": [
+                    "$msCompile"
+                ],
+            },
+            "linux": {
+                "command": "${fileDirname}/scripts/build.sh",
+                "args": [
+                    "${file}",
+                    "${fileDirname}/build/linux",
+                    "${input:buildType}"
+                ],
+                "problemMatcher": "$gcc"
+            },
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

@@ -1,21 +1,21 @@
 #ifndef MY_CREATE_DIRECTORY
 #define MY_CREATE_DIRECTORY
 
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
-#include <errno.h>
 
-#if defined(_WIN32)
-    #include <direct.h>
-    #define PATH_SEP1 '\\'
-    #define PATH_SEP2 '/'
-    #define MKDIR(path) _mkdir(path)
+#ifdef _WIN32
+#include <direct.h>
+#define PATH_SEP1 '\\'
+#define PATH_SEP2 '/'
+#define MKDIR(path) _mkdir(path)
 #else
-    #include <sys/stat.h>
-    #include <sys/types.h>
-    #define PATH_SEP1 '/'
-    #define PATH_SEP2 '/'
-    #define MKDIR(path) mkdir(path, 0755)
+#include <sys/stat.h>
+#include <sys/types.h>
+#define PATH_SEP1 '/'
+#define PATH_SEP2 '/'
+#define MKDIR(path) mkdir(path, 0755)
 #endif
 
 static int do_mkdir(const char *path) {
@@ -43,7 +43,7 @@ int create_directories(const char *path) {
         return -1;
     }
 
-    strcpy(tmp, path);
+    snprintf(tmp, sizeof(tmp), "%s", path);
 
     for (p = tmp + 1; *p; ++p) {
         if (*p == PATH_SEP1 || *p == PATH_SEP2) {
@@ -65,4 +65,4 @@ int create_directories(const char *path) {
     return 0;
 }
 
-#endif 
+#endif
