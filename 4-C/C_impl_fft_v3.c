@@ -67,7 +67,7 @@ void write_VTK(fftw_complex *con, size_t N0, size_t N1, char *folder_path, size_
 
 int main(void) {
 
-    const double total_time = 100., dt = 1e-1; // 100 seconds, compute per 0.11 seconds;
+    const double total_time = 1000., dt = 1e-1; // 100 seconds, compute per 0.1 seconds;
 
     const size_t num_total_output = 100,                     // need 100 results
         num_total_compute = (size_t)(total_time / dt),       // auto-compute total computation steps

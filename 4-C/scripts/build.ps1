@@ -11,7 +11,7 @@ function Write-Warn    { param($msg) Write-Host "[WARN]  $msg" -ForegroundColor 
 function Write-Fail    { param($msg) Write-Host "[ERROR] $msg" -ForegroundColor Red }
 
 # ── Find and initialize MSVC environment ──────────────────────────────────
-$vcvars = "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"
+$vcvars = "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat"
 
 if (-not (Test-Path $vcvars)) {
     Write-Error "! vcvarsall.bat not found at '$vcvars'. Please update the path in build script."
@@ -65,7 +65,7 @@ $clArgs = @(
     "/INCREMENTAL:NO"
 )
 
-Write-Info "Building '$basename' ($BuildType)..." -ForegroundColor Cyan
+Write-Info "Building '$basename' ($BuildType)..." 
 & cl.exe @clArgs
 
 if ($LASTEXITCODE -ne 0) {
@@ -74,3 +74,12 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Success "Build succeeded: $OutDir\$basename.exe"
+
+if ($basename -match "v3") {
+    $FFTW_DLL = (Get-Item (Join-Path $libPath $lib)).FullName.Replace(".lib", ".dll")
+    $DEST_DLL = Join-Path $OutDir (Get-Item $FFTW_DLL).Name
+    if (!(Test-Path $DEST_DLL)) {
+        Copy-Item $FFTW_DLL $OutDir
+        Write-Info "Copied $FFTW_DLL to $OutDir"
+    }
+}
